@@ -1,4 +1,3 @@
 cd nestjs-customer-feedback
 npm run commitlint
 cd ..
-
