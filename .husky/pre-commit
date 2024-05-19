@@ -1,0 +1,3 @@
+cd nestjs-customer-feedback
+npm run pre-commit
+cd ..
