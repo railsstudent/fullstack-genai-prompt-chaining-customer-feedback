@@ -7,4 +7,4 @@ import { AdvisoryFeedbackController } from './presenters/http/advisory-feedback.
   controllers: [AdvisoryFeedbackController],
   providers: [AdvisoryFeedbackPromptChainingService, AdvisoryFeedbackService],
 })
-export class CustomerFeedbackModule {}
+export class AdvisoryFeedbackModule {}

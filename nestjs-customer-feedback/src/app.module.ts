@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
-import { CustomerFeedbackModule } from '~customer-feedback/customer-feedback.module';
+import { AdvisoryFeedbackModule } from '~customer-feedback/advisory-feedback.module';
 
 @Module({
-  imports: [CustomerFeedbackModule],
+  imports: [AdvisoryFeedbackModule],
   controllers: [AppController],
   providers: [],
 })
