@@ -1,4 +1,4 @@
 export type SentimentAnalysis = {
-  sentiment: string;
+  sentiment: 'POSITIVE' | 'NEUTRAL' | 'NEGATIVE';
   topic: string;
 };
