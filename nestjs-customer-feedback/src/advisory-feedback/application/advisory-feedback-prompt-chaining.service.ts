@@ -1,15 +1,16 @@
 import { GenerativeModel } from '@google/generative-ai';
-import { Inject, Injectable, Logger } from '@nestjs/common';
-import { GEMINI_ADVISORY_FEEDBACK_MODEL, GEMINI_SENTIMENT_ANALYSIS_MODEL } from './constants/gemini.constant';
+import { Injectable, Logger } from '@nestjs/common';
 import { SentimentAnalysis } from './types/sentiment-analysis.type';
+import { injectAnalysisModel, injectFeedbackModel, injectFindLanguageModel } from './injectors/models.injector';
 
 @Injectable()
 export class AdvisoryFeedbackPromptChainingService {
   private readonly logger = new Logger(AdvisoryFeedbackPromptChainingService.name);
 
   constructor(
-    @Inject(GEMINI_SENTIMENT_ANALYSIS_MODEL) private analysisModel: GenerativeModel,
-    @Inject(GEMINI_ADVISORY_FEEDBACK_MODEL) private feedbackModel: GenerativeModel,
+    @injectAnalysisModel() private analysisModel: GenerativeModel,
+    @injectFeedbackModel() private feedbackModel: GenerativeModel,
+    @injectFindLanguageModel() private findLanguageModel: GenerativeModel,
   ) {}
 
   async generateSentinment(prompt: string): Promise<SentimentAnalysis> {
@@ -27,8 +28,10 @@ export class AdvisoryFeedbackPromptChainingService {
 
   async generateFeedback(prompt: string, { sentiment, topic }: SentimentAnalysis) {
     try {
+      const language = await this.findLanguage(prompt);
+
       const chainedPrompt = `
-        The customer wrote a ${sentiment} feedback about ${topic}. Provided feedback: ${prompt}.
+        The customer wrote a ${sentiment} feedback about ${topic} in ${language}. Provided feedback: ${prompt}.
         Feedback: 
         `;
 
@@ -42,5 +45,13 @@ export class AdvisoryFeedbackPromptChainingService {
       console.error(ex);
       throw ex;
     }
+  }
+
+  private async findLanguage(prompt: string): Promise<string> {
+    const languageResult = await this.findLanguageModel.generateContent(prompt);
+    const languageResponse = await languageResult.response;
+    const language = languageResponse.text();
+    this.logger.log(language);
+    return language;
   }
 }

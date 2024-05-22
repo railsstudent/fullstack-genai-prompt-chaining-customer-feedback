@@ -4,6 +4,7 @@ import { AdvisoryFeedbackService } from './application/advisory-feedback.service
 import { GeminiAdvisoryFeedbackProvider } from './application/providers/advisory-feedback-model.provider';
 import { GeminiSentimentAnalysisProvider } from './application/providers/seniment-model.provider';
 import { AdvisoryFeedbackController } from './presenters/https/advisory-feedback.controller';
+import { GeminiFindLanguageProvider } from './application/providers/gemini-find-language.provider';
 
 @Module({
   controllers: [AdvisoryFeedbackController],
@@ -12,6 +13,7 @@ import { AdvisoryFeedbackController } from './presenters/https/advisory-feedback
     AdvisoryFeedbackService,
     GeminiSentimentAnalysisProvider,
     GeminiAdvisoryFeedbackProvider,
+    GeminiFindLanguageProvider,
   ],
 })
 export class AdvisoryFeedbackModule {}

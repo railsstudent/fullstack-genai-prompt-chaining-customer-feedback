@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { AdvisoryFeedbackService } from '~customer-feedback/application/advisory-feedback.service';
+import { AdvisoryFeedbackService } from '~advisory-feedback/application/advisory-feedback.service';
 import { FeedbackDto } from '../dtos/feedback.dto';
 
 @ApiTags('Advisory Feedback')
@@ -48,7 +48,12 @@ export class AdvisoryFeedbackController {
       negativeFeedback2: {
         value: {
           prompt:
-            'The ESG platform is missing the data analysis and data visualization features. No chart and graph to display the aggregated data of reports of a company',
+            'The ESG platform is missing the data analysis and data visualization features. No chart and graph to display the aggregated data of reports of a company make your software less appealing to your competitors.',
+        },
+      },
+      positiveChineseFeedback: {
+        value: {
+          prompt: 'Diginex 的 ESG 平台非常棒。我將用它來建立 ESG 報告並推薦其他人訂閱該平台。',
         },
       },
     },
