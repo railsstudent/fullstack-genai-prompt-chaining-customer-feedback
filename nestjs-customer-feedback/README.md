@@ -24,7 +24,9 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+This repo uses NestJS, Gemini API and Gemini 1.5 Pro model to build a backend application to generate ESG advisory feedback with prompt chaining.
+
+Google Cloud credits are provided for this project.
 
 ## Installation
 
@@ -32,42 +34,25 @@
 $ npm install
 ```
 
-## Running the app
+## Environment variables
+
+| Name                  | Description                                        |
+| --------------------- | -------------------------------------------------- |
+| PORT                  | Backend Port. Default to 3000                      |
+| GOOGLE_GEMINI_API_KEY | Google Gemini API Key                              |
+| GOOGLE_GEMINI_MODEL   | Google Gemini model. Default gemini-1.5-pro-latest |
+
+## Running the app in Docker
+
+- Copy `.env.example` to `.env`
+- Update the environment variables in `.env`
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+$ cp .env.example .env
+$ docker-compose up -d
 ```
 
-## Test
+### Test APIs
 
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+- Open the browser and navigate to http://localhost:3000/api
+- Test the API in Swagger

@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - PORT=${PORT}
+      - GOOGLE_GEMINI_API_KEY=${GOOGLE_GEMINI_API_KEY}
+      - GOOGLE_GEMINI_MODEL=${GOOGLE_GEMINI_MODEL}
+    ports:
+      - "${PORT}:${PORT}"
+    networks:
+      - ai
+    restart: unless-stopped
+networks:
+  ai:
