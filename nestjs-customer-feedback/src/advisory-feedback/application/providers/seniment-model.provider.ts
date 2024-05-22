@@ -1,6 +1,5 @@
 import { GenerativeModel } from '@google/generative-ai';
 import { Provider } from '@nestjs/common';
-import { GENERATION_CONFIG } from '../configs/genimi.config';
 import { GEMINI_SENTIMENT_ANALYSIS_MODEL } from '../constants/gemini.constant';
 import { modelFactory } from './model-factory';
 
@@ -11,9 +10,5 @@ const SENTIMENT_ANALYSIS_SYSTEM_INSTRUCTION = `
 
 export const GeminiSentimentAnalysisProvider: Provider<GenerativeModel> = {
   provide: GEMINI_SENTIMENT_ANALYSIS_MODEL,
-  useFactory: () =>
-    modelFactory(SENTIMENT_ANALYSIS_SYSTEM_INSTRUCTION, {
-      ...GENERATION_CONFIG,
-      responseMimeType: 'application/json',
-    }),
+  useFactory: () => modelFactory(SENTIMENT_ANALYSIS_SYSTEM_INSTRUCTION, true),
 };

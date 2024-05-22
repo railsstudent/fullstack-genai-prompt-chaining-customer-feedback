@@ -1,6 +1,5 @@
 import { GenerativeModel } from '@google/generative-ai';
 import { Provider } from '@nestjs/common';
-import { GENERATION_CONFIG } from '../configs/genimi.config';
 import { GEMINI_FIND_LANGUAGE_MODEL } from '../constants/gemini.constant';
 import { modelFactory } from './model-factory';
 
@@ -10,5 +9,5 @@ const FIND_LANGUAGE_SYSTEM_INSTRUCTION = `You are a multilingual expert that can
 
 export const GeminiFindLanguageProvider: Provider<GenerativeModel> = {
   provide: GEMINI_FIND_LANGUAGE_MODEL,
-  useFactory: () => modelFactory(FIND_LANGUAGE_SYSTEM_INSTRUCTION, GENERATION_CONFIG),
+  useFactory: () => modelFactory(FIND_LANGUAGE_SYSTEM_INSTRUCTION),
 };
