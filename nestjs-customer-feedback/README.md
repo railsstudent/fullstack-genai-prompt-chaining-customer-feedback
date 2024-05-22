@@ -56,3 +56,7 @@ $ docker-compose up -d
 
 - Open the browser and navigate to http://localhost:3000/api
 - Test the API in Swagger
+
+Resources:
+
+https://github.com/google-gemini/cookbook/blob/main/quickstarts/Function_calling.ipynb
