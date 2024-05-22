@@ -53,7 +53,12 @@ export class AdvisoryFeedbackController {
       },
       positiveChineseFeedback: {
         value: {
-          prompt: 'Diginex 的 ESG 平台非常棒。我將用它來建立 ESG 報告並推薦其他人訂閱該平台。',
+          prompt: 'Diginex的ESG 平台非常棒。我將用它來建立 ESG 報告並推薦其他人訂閱該平台。',
+        },
+      },
+      positiveSpanishFeedback: {
+        value: {
+          prompt: 'La plataforma Diginex es muy útil y poderosa. Lo uso para crear informes y lo recomendaré a otros.',
         },
       },
     },

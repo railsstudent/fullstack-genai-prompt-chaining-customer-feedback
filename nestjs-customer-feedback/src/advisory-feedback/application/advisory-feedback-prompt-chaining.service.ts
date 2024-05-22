@@ -13,7 +13,7 @@ export class AdvisoryFeedbackPromptChainingService {
     @injectFindLanguageModel() private findLanguageModel: GenerativeModel,
   ) {}
 
-  async generateSentinment(prompt: string): Promise<SentimentAnalysis> {
+  private async generateSentinment(prompt: string): Promise<SentimentAnalysis> {
     try {
       const result = await this.analysisModel.generateContent(prompt);
       const response = await result.response;
@@ -26,9 +26,12 @@ export class AdvisoryFeedbackPromptChainingService {
     }
   }
 
-  async generateFeedback(prompt: string, { sentiment, topic }: SentimentAnalysis) {
+  async generateFeedback(prompt: string) {
     try {
-      const language = await this.findLanguage(prompt);
+      const [{ sentiment, topic }, language] = await Promise.all([
+        this.generateSentinment(prompt),
+        this.findLanguage(prompt),
+      ]);
 
       const chainedPrompt = `
         The customer wrote a ${sentiment} feedback about ${topic} in ${language}. Provided feedback: ${prompt}.
@@ -51,7 +54,6 @@ export class AdvisoryFeedbackPromptChainingService {
     const languageResult = await this.findLanguageModel.generateContent(prompt);
     const languageResponse = await languageResult.response;
     const language = languageResponse.text();
-    this.logger.log(language);
     return language;
   }
 }

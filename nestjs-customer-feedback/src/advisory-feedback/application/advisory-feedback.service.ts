@@ -5,8 +5,7 @@ import { AdvisoryFeedbackPromptChainingService } from './advisory-feedback-promp
 export class AdvisoryFeedbackService {
   constructor(private promptChainingService: AdvisoryFeedbackPromptChainingService) {}
 
-  async generateFeedback(prompt: string): Promise<string> {
-    const sentiment = await this.promptChainingService.generateSentinment(prompt);
-    return this.promptChainingService.generateFeedback(prompt, sentiment);
+  generateFeedback(prompt: string): Promise<string> {
+    return this.promptChainingService.generateFeedback(prompt);
   }
 }
