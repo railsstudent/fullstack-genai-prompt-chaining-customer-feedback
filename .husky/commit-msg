@@ -1,3 +1,5 @@
 cd nestjs-customer-feedback
 npm run commitlint
-cd ..
+cd ../nestjs-groq-customer-feedback
+npm run commitlint
+cd ../

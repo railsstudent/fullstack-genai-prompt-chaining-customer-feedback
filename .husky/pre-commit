@@ -1,3 +1,6 @@
 cd nestjs-customer-feedback
 npm run pre-commit
-cd ..
+cd ../nestjs-groq-customer-feedback
+npm run pre-commit
+cd ../
+
