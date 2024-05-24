@@ -2,4 +2,6 @@ cd nestjs-customer-feedback
 npm run commitlint
 cd ../nestjs-groq-customer-feedback
 npm run commitlint
+cd ../nestjs-langchain-customer-feedback
+npm run commitlint
 cd ../
