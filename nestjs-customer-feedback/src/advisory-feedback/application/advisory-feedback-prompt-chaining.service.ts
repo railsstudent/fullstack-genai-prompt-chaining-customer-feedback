@@ -17,7 +17,7 @@ export class AdvisoryFeedbackPromptChainingService {
     @Inject(GEMINI_FIND_LANGUAGE_MODEL) private findLanguageModel: GenerativeModel,
   ) {}
 
-  async generateFeedback(prompt: string) {
+  async generateFeedback(prompt: string): Promise<string> {
     try {
       const [analysis, language] = await Promise.all([this.analyseSentinment(prompt), this.findLanguage(prompt)]);
       const { sentiment, topic } = analysis;
