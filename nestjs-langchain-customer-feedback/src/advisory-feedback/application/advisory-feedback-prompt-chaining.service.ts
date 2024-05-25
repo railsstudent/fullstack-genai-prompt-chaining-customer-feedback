@@ -39,7 +39,7 @@ export class AdvisoryFeedbackPromptChainingService {
   }
 
   private createSentimentChain() {
-    const sentimentTemplate = `What is the sentiment of this feedback?
+    const sentimentTemplate = `What is the sentiment of this feedback? No explaination is needed.
     When the sentiment is positive, return 'POSITIVE', is neutral, return 'NEUTRAL', is negative, return 'NEGATIVE'.
     Feedback: {feedback}`;
     const sentimentPrompt = PromptTemplate.fromTemplate<{ feedback: string }>(sentimentTemplate);
@@ -53,10 +53,9 @@ export class AdvisoryFeedbackPromptChainingService {
       const sentimentChain = this.createSentimentChain();
       const topicChain = this.createTopicChain();
 
-      const feedbackPrompt = PromptTemplate.fromTemplate(`
-        The customer wrote a {sentiment} feedback about {topic} in {language}. Feedback: {feedback}
-        Please give a short reply in the same language. 
-      `);
+      const feedbackPrompt =
+        PromptTemplate.fromTemplate(`The customer wrote a {sentiment} feedback about {topic} in {language}. Feedback: {feedback}
+        Please give a short reply in the same language.`);
 
       const combinedChain = RunnableSequence.from([
         {
