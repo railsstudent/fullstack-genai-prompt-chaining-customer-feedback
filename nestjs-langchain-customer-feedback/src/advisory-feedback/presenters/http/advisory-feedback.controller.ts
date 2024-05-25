@@ -1,6 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AdvisoryFeedbackService } from '~advisory-feedback/application/advisory-feedback.service';
+import { ChainOutput } from '~advisory-feedback/application/types/chant-output.type';
 import { FeedbackDto } from '../dtos/feedback.dto';
 
 @ApiTags('Advisory Feedback')
@@ -71,5 +72,51 @@ export class AdvisoryFeedbackController {
   @Post()
   createFeedback(@Body() dto: FeedbackDto): Promise<string> {
     return this.service.generateFeedback(dto.prompt);
+  }
+
+  @ApiBody({
+    description: 'An intance of FeedbackDto',
+    required: true,
+    schema: {
+      type: 'object',
+      properties: {
+        prompt: {
+          type: 'string',
+          description: 'customer feedback',
+        },
+      },
+    },
+    examples: {
+      positiveSpanishFeedback: {
+        value: {
+          prompt: 'La plataforma Diginex es muy útil y poderosa. Lo uso para crear informes y lo recomendaré a otros.',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    description: 'The advisory feedback',
+    schema: {
+      type: 'object',
+      properties: {
+        language: {
+          type: 'string',
+          description: 'language used in the feedback',
+        },
+        sentiment: {
+          type: 'string',
+          description: 'sentiment of the feedback',
+        },
+        topic: {
+          type: 'string',
+          description: 'what the feedback is about',
+        },
+      },
+    },
+    status: 201,
+  })
+  @Post('test-chains')
+  testChains(@Body() dto: FeedbackDto): Promise<ChainOutput> {
+    return this.service.testChains(dto.prompt);
   }
 }

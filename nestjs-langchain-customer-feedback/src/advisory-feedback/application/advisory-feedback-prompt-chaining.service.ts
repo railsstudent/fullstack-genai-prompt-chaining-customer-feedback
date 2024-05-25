@@ -4,6 +4,7 @@ import { RunnableSequence } from '@langchain/core/runnables';
 import { ChatGoogleGenerativeAI } from '@langchain/google-genai';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { GEMINI_CHAT_MODEL } from './constants/gemini.constant';
+import { ChainOutput } from './types/chant-output.type';
 
 // https://www.kaggle.com/code/marcinrutecki/langchain-multiple-chains-simply-explained
 
@@ -21,7 +22,7 @@ export class AdvisoryFeedbackPromptChainingService {
   private createFindLanguageChain() {
     const languageTemplate = `What is the language of this feedback? 
     If the feedback is written in Chinese, please differentiate Traditional Chinese and Simplified Chinese. 
-    Please give me the language name, and nothing else.
+    Please give me the language name, and nothing else. Delete the trailing newline character
     Feedback: {feedback}`;
     const languagePrompt = PromptTemplate.fromTemplate<{ feedback: string }>(languageTemplate);
 
@@ -29,7 +30,9 @@ export class AdvisoryFeedbackPromptChainingService {
   }
 
   private createTopicChain() {
-    const topicTemplate = 'What is the topic of this feedback? Feedback: {feedback}';
+    const topicTemplate = `What is the topic of this feedback?
+    Just the topic and explanation is not needed. Delete the trailing newline character
+    Feedback: {feedback}`;
     const topicPrompt = PromptTemplate.fromTemplate<{ feedback: string }>(topicTemplate);
 
     return topicPrompt.pipe(this.model).pipe(new StringOutputParser());
@@ -37,7 +40,7 @@ export class AdvisoryFeedbackPromptChainingService {
 
   private createSentimentChain() {
     const sentimentTemplate = `What is the sentiment of this feedback?
-    When the sentiment is positive, return 'POSITIVE', is neutral, return 'NEUTRAL', is negative, return 'NEGATIVE'. 
+    When the sentiment is positive, return 'POSITIVE', is neutral, return 'NEUTRAL', is negative, return 'NEGATIVE'.
     Feedback: {feedback}`;
     const sentimentPrompt = PromptTemplate.fromTemplate<{ feedback: string }>(sentimentTemplate);
 
@@ -78,5 +81,29 @@ export class AdvisoryFeedbackPromptChainingService {
       console.error(ex);
       throw ex;
     }
+  }
+
+  async testChains(feedback: string): Promise<ChainOutput> {
+    const chain = this.createFindLanguageChain();
+    const chain2 = this.createSentimentChain();
+    const chain3 = this.createTopicChain();
+
+    const [language, sentiment, topic] = await Promise.all([
+      chain.invoke({
+        feedback,
+      }),
+      chain2.invoke({
+        feedback,
+      }),
+      chain3.invoke({
+        feedback,
+      }),
+    ]);
+
+    return {
+      language,
+      sentiment,
+      topic,
+    };
   }
 }
