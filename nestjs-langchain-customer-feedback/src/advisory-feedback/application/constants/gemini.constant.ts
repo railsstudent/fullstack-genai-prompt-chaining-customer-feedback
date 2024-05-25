@@ -1,0 +1,1 @@
+export const GEMINI_CHAT_MODEL = 'GEMINI_CHAT_MODEL';

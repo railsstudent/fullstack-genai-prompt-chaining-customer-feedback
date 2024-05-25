@@ -3,9 +3,10 @@ import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { throttlerConfig } from '~configs/throttler.config';
 import { AppController } from './app.controller';
+import { AdvisoryFeedbackModule } from './advisory-feedback/advisory-feedback.module';
 
 @Module({
-  imports: [throttlerConfig],
+  imports: [throttlerConfig, AdvisoryFeedbackModule],
   controllers: [AppController],
   providers: [
     {
