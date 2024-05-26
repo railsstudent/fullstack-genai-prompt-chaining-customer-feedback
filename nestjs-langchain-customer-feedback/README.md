@@ -24,7 +24,9 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+This repo uses NestJS, Langchain and Gemini 1.5 Pro model to build a backend application to generate ESG advisory feedback with prompt chaining.
+
+Google Cloud credits are provided for this project.
 
 ## Installation
 
@@ -32,42 +34,29 @@
 $ pnpm install
 ```
 
-## Running the app
+## Environment variables
+
+| Name                  | Description                                           |
+| --------------------- | ----------------------------------------------------- |
+| PORT                  | Backend Port. Default to 3002                         |
+| GOOGLE_GEMINI_API_KEY | Google Gemini API Key                                 |
+| GOOGLE_GEMINI_MODEL   | Google Gemini model. Default to gemini-1.5-pro-latest |
+
+## Running the app in Docker
+
+- Copy `.env.example` to `.env`
+- Update the environment variables in `.env`
 
 ```bash
-# development
-$ pnpm run start
-
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
+$ cp .env.example .env
+$ docker-compose up -d
 ```
 
-## Test
+### Test APIs
 
-```bash
-# unit tests
-$ pnpm run test
+- Open the browser and navigate to http://localhost:3000/api
+- Test the API in Swagger
 
-# e2e tests
-$ pnpm run test:e2e
+Resources:
 
-# test coverage
-$ pnpm run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+https://github.com/google-gemini/cookbook/blob/main/quickstarts/Function_calling.ipynb

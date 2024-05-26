@@ -54,7 +54,7 @@ $ docker-compose up -d
 
 ### Test APIs
 
-- Open the browser and navigate to http://localhost:3000/api
+- Open the browser and navigate to http://localhost:3001/api
 - Test the API in Swagger
 
 Resources:

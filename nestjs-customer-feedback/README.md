@@ -36,11 +36,11 @@ $ pnpm install
 
 ## Environment variables
 
-| Name                  | Description                                        |
-| --------------------- | -------------------------------------------------- |
-| PORT                  | Backend Port. Default to 3000                      |
-| GOOGLE_GEMINI_API_KEY | Google Gemini API Key                              |
-| GOOGLE_GEMINI_MODEL   | Google Gemini model. Default gemini-1.5-pro-latest |
+| Name                  | Description                                           |
+| --------------------- | ----------------------------------------------------- |
+| PORT                  | Backend Port. Default to 3000                         |
+| GOOGLE_GEMINI_API_KEY | Google Gemini API Key                                 |
+| GOOGLE_GEMINI_MODEL   | Google Gemini model. Default to gemini-1.5-pro-latest |
 
 ## Running the app in Docker
 
