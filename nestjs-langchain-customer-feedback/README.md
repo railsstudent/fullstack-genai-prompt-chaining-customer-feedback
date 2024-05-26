@@ -59,4 +59,5 @@ $ docker-compose up -d
 
 Resources:
 
-https://github.com/google-gemini/cookbook/blob/main/quickstarts/Function_calling.ipynb
+- https://js.langchain.com/v0.1/docs/expression_language/cookbook/multiple_chains/https://github.com/
+- https://www.kaggle.com/code/marcinrutecki/langchain-multiple-chains-simply-explained
