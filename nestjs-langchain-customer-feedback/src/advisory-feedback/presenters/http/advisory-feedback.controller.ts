@@ -1,8 +1,34 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AdvisoryFeedbackService } from '~advisory-feedback/application/advisory-feedback.service';
-import { ChainOutput } from '~advisory-feedback/application/types/chant-output.type';
+import { ChainOutput } from '~advisory-feedback/application/types/chain-output.type';
 import { FeedbackDto } from '../dtos/feedback.dto';
+
+const TEST_INPUT_DEFINITION = {
+  description: 'An intance of FeedbackDto',
+  required: true,
+  schema: {
+    type: 'object',
+    properties: {
+      prompt: {
+        type: 'string',
+        description: 'customer feedback',
+      },
+    },
+  },
+  examples: {
+    positiveChineseFeedback: {
+      value: {
+        prompt: 'Diginex的ESG 平台非常棒。我將用它來建立 ESG 報告並推薦其他人訂閱該平台。',
+      },
+    },
+    positiveSpanishFeedback: {
+      value: {
+        prompt: 'La plataforma Diginex es muy útil y poderosa. Lo uso para crear informes y lo recomendaré a otros.',
+      },
+    },
+  },
+};
 
 @ApiTags('Advisory Feedback')
 @Controller('esg-advisory-feedback')
@@ -74,31 +100,7 @@ export class AdvisoryFeedbackController {
     return this.service.generateFeedback(dto.prompt);
   }
 
-  @ApiBody({
-    description: 'An intance of FeedbackDto',
-    required: true,
-    schema: {
-      type: 'object',
-      properties: {
-        prompt: {
-          type: 'string',
-          description: 'customer feedback',
-        },
-      },
-    },
-    examples: {
-      positiveChineseFeedback: {
-        value: {
-          prompt: 'Diginex的ESG 平台非常棒。我將用它來建立 ESG 報告並推薦其他人訂閱該平台。',
-        },
-      },
-      positiveSpanishFeedback: {
-        value: {
-          prompt: 'La plataforma Diginex es muy útil y poderosa. Lo uso para crear informes y lo recomendaré a otros.',
-        },
-      },
-    },
-  })
+  @ApiBody(TEST_INPUT_DEFINITION)
   @ApiResponse({
     description: 'The advisory feedback',
     schema: {
@@ -123,5 +125,36 @@ export class AdvisoryFeedbackController {
   @Post('test-chains')
   testChains(@Body() dto: FeedbackDto): Promise<ChainOutput> {
     return this.service.testChains(dto.prompt);
+  }
+
+  @ApiBody(TEST_INPUT_DEFINITION)
+  @ApiResponse({
+    description: 'The advisory feedback',
+    schema: {
+      type: 'object',
+      properties: {
+        language: {
+          type: 'string',
+          description: 'language used in the feedback',
+        },
+        sentiment: {
+          type: 'string',
+          description: 'sentiment of the feedback',
+        },
+        topic: {
+          type: 'string',
+          description: 'what the feedback is about',
+        },
+        feedback: {
+          type: 'string',
+          description: 'the original feedback',
+        },
+      },
+    },
+    status: 201,
+  })
+  @Post('test-runnable-map')
+  testRunnableMap(@Body() dto: FeedbackDto): Promise<Record<string, any>> {
+    return this.service.testRunnableMap(dto.prompt);
   }
 }

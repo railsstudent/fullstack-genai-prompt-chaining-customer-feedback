@@ -54,10 +54,11 @@ $ docker-compose up -d
 
 ### Test APIs
 
-- Open the browser and navigate to http://localhost:3000/api
+- Open the browser and navigate to http://localhost:3002/api
 - Test the API in Swagger
 
 Resources:
 
 - https://js.langchain.com/v0.1/docs/expression_language/cookbook/multiple_chains/https://github.com/
 - https://www.kaggle.com/code/marcinrutecki/langchain-multiple-chains-simply-explained
+- https://js.langchain.com/v0.1/docs/expression_language/how_to/map/

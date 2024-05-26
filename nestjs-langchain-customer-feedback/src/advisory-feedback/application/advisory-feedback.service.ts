@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { AdvisoryFeedbackPromptChainingService } from './advisory-feedback-prompt-chaining.service';
-import { ChainOutput } from './types/chant-output.type';
+import { ChainOutput } from './types/chain-output.type';
 
 @Injectable()
 export class AdvisoryFeedbackService {
@@ -12,5 +12,9 @@ export class AdvisoryFeedbackService {
 
   testChains(prompt: string): Promise<ChainOutput> {
     return this.promptChainingService.testChains(prompt);
+  }
+
+  testRunnableMap(prompt: string): Promise<Record<string, any>> {
+    return this.promptChainingService.testRunnableMap(prompt);
   }
 }
