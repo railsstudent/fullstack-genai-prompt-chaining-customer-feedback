@@ -14,7 +14,7 @@ RUN pnpm install
 COPY . .
 
 # Expose a port (if your application listens on a specific port)
-EXPOSE 3000
+EXPOSE 3002
 
 # Define the command to run your application
 CMD [ "pnpm", "run", "start:dev"]
