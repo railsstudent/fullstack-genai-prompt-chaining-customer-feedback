@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@huggingface/inference':
+        specifier: 2.7.0
+        version: 2.7.0
       '@nestjs/common':
         specifier: 10.3.8
         version: 10.3.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)
@@ -403,6 +406,13 @@ packages:
   '@eslint/js@8.57.0':
     resolution: {integrity: sha512-Ys+3g2TaW7gADOJzPt83SJtCDhMjndcDMFVQ/Tj9iA1BfJzFKD9mAUXT3OenpuPHbI6P/myECxRJrofUsDx/5g==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+
+  '@huggingface/inference@2.7.0':
+    resolution: {integrity: sha512-u7Fn637Q3f7nUB1tajM4CgzhvoFQkOQr5W5Fm+2wT9ETgGoLBh25BLlYPTJRjAd2WY01s71v0lqAwNvHHCc3mg==}
+    engines: {node: '>=18'}
+
+  '@huggingface/tasks@0.10.8':
+    resolution: {integrity: sha512-oIp9912FwByyyyxkB/CIiW203QxPeYzBG7dydLmqZdcW0ma0if1uklGumqkJ6y/rJlv7AR/jJ9wbee0Wl5YZTw==}
 
   '@humanwhocodes/config-array@0.11.14':
     resolution: {integrity: sha512-3T8LkOmg45BV5FICb15QQMsyUSWrQ8AygVfC7ZG32zOalnqrilm018ZVCw0eapXux8FtA33q8PSRSstjee3jSg==}
@@ -3612,6 +3622,12 @@ snapshots:
       - supports-color
 
   '@eslint/js@8.57.0': {}
+
+  '@huggingface/inference@2.7.0':
+    dependencies:
+      '@huggingface/tasks': 0.10.8
+
+  '@huggingface/tasks@0.10.8': {}
 
   '@humanwhocodes/config-array@0.11.14':
     dependencies:
