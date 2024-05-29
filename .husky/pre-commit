@@ -4,5 +4,7 @@ cd ../nestjs-groq-customer-feedback
 npm run pre-commit
 cd ../nestjs-langchain-customer-feedback
 npm run pre-commit
+cd ../nestjs-huggingface-customer-feedback
+npm run pre-commit
 cd ../
 

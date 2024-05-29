@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - PORT=${PORT}
+      - HUGGINGFACE_API_KEY=${HUGGINGFACE_API_KEY}
+      - HUGGINGFACE_MODEL=${HUGGINGFACE_MODEL}
+    ports:
+      - "${PORT}:${PORT}"
+    networks:
+      - ai
+    restart: unless-stopped
+networks:
+  ai:
