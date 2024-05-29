@@ -1,12 +1,17 @@
 import { HfInference } from '@huggingface/inference';
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { HUGGINGFACE_INFERENCE } from './constants/huggingface.constant';
+import { HUGGINGFACE_CHAT_PARAMETERS, HUGGINGFACE_INFERENCE } from './constants/huggingface.constant';
+import { env } from '~configs/env.config';
+import { ChatComputInputParameters } from './providers/huggingface-chat-parameters.provider';
 
 @Injectable()
 export class AdvisoryFeedbackPromptChainingService {
   private readonly logger = new Logger(AdvisoryFeedbackPromptChainingService.name);
 
-  constructor(@Inject(HUGGINGFACE_INFERENCE) private hfInference: HfInference) {}
+  constructor(
+    @Inject(HUGGINGFACE_INFERENCE) private hfInference: HfInference,
+    @Inject(HUGGINGFACE_CHAT_PARAMETERS) private chatParameters: ChatComputInputParameters,
+  ) {}
 
   // // three chains:
   // // chain 1: find the language of the feedback
@@ -43,6 +48,11 @@ export class AdvisoryFeedbackPromptChainingService {
 
   async generateFeedback(feedback: string): Promise<string> {
     try {
+      this.hfInference.chatCompletion({
+        model: env.HUGGINGFACE.MODEL_NAME,
+        messages: [],
+        ...this.chatParameters,
+      });
       // const chainMap = RunnableMap.from<CustomerFeedback>({
       //   language: this.createFindLanguageChain(),
       //   sentiment: this.createSentimentChain(),
