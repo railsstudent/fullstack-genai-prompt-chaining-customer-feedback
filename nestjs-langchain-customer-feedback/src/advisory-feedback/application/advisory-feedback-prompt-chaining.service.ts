@@ -22,7 +22,8 @@ export class AdvisoryFeedbackPromptChainingService {
   // chain 4: combine chain 1, 2 and 3 into a new chain. Then, address the topic and reply in the same language
   private createFindLanguageChain() {
     const languageTemplate = `What is the language of this feedback? 
-    If the feedback is written in Chinese, please differentiate Traditional Chinese and Simplified Chinese. 
+    When the feedback is written in Traditional Chinese, return Traditional Chinese. When the feedback is written in 
+    Simplified Chinese, return Simplified Chinese.
     Please give me the language name, and nothing else. Delete the trailing newline character
     Feedback: {feedback}`;
     const languagePrompt = PromptTemplate.fromTemplate<CustomerFeedback>(languageTemplate);
