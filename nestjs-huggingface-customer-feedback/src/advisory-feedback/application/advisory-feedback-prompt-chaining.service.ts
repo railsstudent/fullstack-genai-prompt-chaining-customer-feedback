@@ -33,48 +33,32 @@ export class AdvisoryFeedbackPromptChainingService {
       const language = (response.choices[0].message.content || '').replace('.', '').trim();
       this.logger.log(`language -> ${language}`);
 
-      messages.push(
-        {
-          role: 'assistant',
-          content: language,
-        },
-        {
-          role: 'user',
-          content: `Identify the sentiment of the feedback (positive, neutral, negative). 
-            When the sentiment is positive, return 'POSITIVE', is neutral, return 'NEUTRAL', is negative, return 'NEGATIVE'.
-            Do not provide explanation.`,
-        },
+      this.appendMessages(
+        messages,
+        language,
+        `Identify the sentiment of the feedback (positive, neutral, negative). 
+      When the sentiment is positive, return 'POSITIVE', is neutral, return 'NEUTRAL', is negative, return 'NEGATIVE'.
+      Do not provide explanation.`,
       );
 
       const sentimentResponse = await this.chat(messages);
       const sentiment = (sentimentResponse.choices[0].message.content || '').trim();
       this.logger.log(`sentiment -> ${sentiment}`);
 
-      messages.push(
-        {
-          role: 'assistant',
-          content: sentiment,
-        },
-        {
-          role: 'user',
-          content: `Identify the topic of the feedback. Keep the number of sub-topics to 3 or less. Do not provide explanation.`,
-        },
+      this.appendMessages(
+        messages,
+        sentiment,
+        `Identify the topic of the feedback. Keep the number of sub-topics to 3 or less. Do not provide explanation.`,
       );
 
       const topicResponse = await this.chat(messages);
       const topic = (topicResponse.choices[0].message.content || '').trim();
       this.logger.log(`topic -> ${topic}`);
 
-      messages.push(
-        {
-          role: 'assistant',
-          content: topic,
-        },
-        {
-          role: 'user',
-          content: `The customer wrote a ${sentiment} feedback about ${topic} in ${language}.
-          Please give a short reply in the same language. Do not do more and provide English translation.`,
-        },
+      this.appendMessages(
+        messages,
+        topic,
+        `The customer wrote a ${sentiment} feedback about ${topic} in ${language}. Please give a short reply in the same language. Do not do more and provide English translation.`,
       );
 
       const replyResponse = await this.chat(messages);
@@ -86,6 +70,19 @@ export class AdvisoryFeedbackPromptChainingService {
       console.error(ex);
       throw ex;
     }
+  }
+
+  private appendMessages(messages: ChatMessage[], response: string, query: string): void {
+    messages.push(
+      {
+        role: 'assistant',
+        content: response,
+      },
+      {
+        role: 'user',
+        content: query,
+      },
+    );
   }
 
   private async chat(messages: { role: string; content: string }[]) {
