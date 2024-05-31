@@ -23,7 +23,7 @@ export class AdvisoryFeedbackPromptChainingService {
       this.appendMessages(messages, 'What is the feedback?', feedback);
 
       const response = await this.chat(messages);
-      const language = (response.choices[0].message.content || '').replace('.', '').trim();
+      const language = response.replace('.', '');
       this.logger.log(`language -> ${language}`);
 
       this.appendMessages(
@@ -34,8 +34,7 @@ export class AdvisoryFeedbackPromptChainingService {
       Do not provide explanation.`,
       );
 
-      const sentimentResponse = await this.chat(messages);
-      const sentiment = (sentimentResponse.choices[0].message.content || '').trim();
+      const sentiment = await this.chat(messages);
       this.logger.log(`sentiment -> ${sentiment}`);
 
       this.appendMessages(
@@ -44,8 +43,7 @@ export class AdvisoryFeedbackPromptChainingService {
         `Identify the topic of the feedback. Keep the number of sub-topics to 3 or less. Do not provide explanation.`,
       );
 
-      const topicResponse = await this.chat(messages);
-      const topic = (topicResponse.choices[0].message.content || '').trim();
+      const topic = await this.chat(messages);
       this.logger.log(`topic -> ${topic}`);
 
       this.appendMessages(
@@ -54,8 +52,7 @@ export class AdvisoryFeedbackPromptChainingService {
         `The customer wrote a ${sentiment} feedback about ${topic} in ${language}. Please give a short reply in the same language. Do not do more and provide English translation.`,
       );
 
-      const replyResponse = await this.chat(messages);
-      const reply = (replyResponse.choices[0].message.content || '').trim();
+      const reply = await this.chat(messages);
       this.logger.log(reply);
 
       return reply;
@@ -80,8 +77,8 @@ export class AdvisoryFeedbackPromptChainingService {
     }
   }
 
-  private async chat(messages: { role: string; content: string }[]) {
-    return this.hfInference.chatCompletion({
+  private async chat(messages: ChatMessage[]): Promise<string> {
+    const response = await this.hfInference.chatCompletion({
       accessToken: env.HUGGINGFACE.API_KEY,
       model: env.HUGGINGFACE.MODEL_NAME,
       temperature: 0.1,
@@ -89,5 +86,7 @@ export class AdvisoryFeedbackPromptChainingService {
       max_tokens: 1024,
       messages,
     });
+
+    return (response.choices?.[0].message.content || '').trim();
   }
 }
