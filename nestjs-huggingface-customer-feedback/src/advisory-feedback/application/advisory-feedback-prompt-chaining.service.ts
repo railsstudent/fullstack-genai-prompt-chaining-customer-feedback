@@ -12,22 +12,15 @@ export class AdvisoryFeedbackPromptChainingService {
 
   async generateFeedback(feedback: string): Promise<string> {
     try {
-      const messages: ChatMessage[] = [
-        {
-          role: 'user',
-          content: `What is the language used to write the feedback? Give me the language name, no explanation, no formal response.
-          When the feedback is written in Traditional Chinese, return Traditional Chinese. When the feedback is written in 
-          Simplified Chinese, return Simplified Chinese.`,
-        },
-        {
-          role: 'assistant',
-          content: 'What is the feedback?',
-        },
-        {
-          role: 'user',
-          content: feedback,
-        },
-      ];
+      const messages: ChatMessage[] = [];
+      this.appendMessages(
+        messages,
+        '',
+        `What is the language used to write the feedback? Give me the language name, no explanation, no formal response.
+      When the feedback is written in Traditional Chinese, return Traditional Chinese. When the feedback is written in 
+      Simplified Chinese, return Simplified Chinese.`,
+      );
+      this.appendMessages(messages, 'What is the feedback?', feedback);
 
       const response = await this.chat(messages);
       const language = (response.choices[0].message.content || '').replace('.', '').trim();
@@ -73,16 +66,18 @@ export class AdvisoryFeedbackPromptChainingService {
   }
 
   private appendMessages(messages: ChatMessage[], response: string, query: string): void {
-    messages.push(
-      {
+    if (response) {
+      messages.push({
         role: 'assistant',
         content: response,
-      },
-      {
+      });
+    }
+    if (query) {
+      messages.push({
         role: 'user',
         content: query,
-      },
-    );
+      });
+    }
   }
 
   private async chat(messages: { role: string; content: string }[]) {
