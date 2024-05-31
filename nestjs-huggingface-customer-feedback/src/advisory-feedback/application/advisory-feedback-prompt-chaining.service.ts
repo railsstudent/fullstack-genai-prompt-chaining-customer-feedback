@@ -87,6 +87,6 @@ export class AdvisoryFeedbackPromptChainingService {
       messages,
     });
 
-    return (response.choices?.[0].message.content || '').trim();
+    return (response.choices?.[0]?.message?.content || '').trim();
   }
 }
