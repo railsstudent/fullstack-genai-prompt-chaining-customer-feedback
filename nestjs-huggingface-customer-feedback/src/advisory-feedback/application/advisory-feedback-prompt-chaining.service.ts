@@ -2,7 +2,7 @@ import { HfInference } from '@huggingface/inference';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { env } from '~configs/env.config';
 import { HUGGINGFACE_INFERENCE } from './constants/huggingface.constant';
-import { SentimentAnalysis } from './types/sentiment-analysis.type';
+import { ChatMessage } from './types/chat-message.type';
 
 @Injectable()
 export class AdvisoryFeedbackPromptChainingService {
@@ -12,41 +12,12 @@ export class AdvisoryFeedbackPromptChainingService {
 
   async generateFeedback(feedback: string): Promise<string> {
     try {
-      const [language, sentiment] = await Promise.all([this.findLanguage(feedback), this.analyseSentinment(feedback)]);
-      this.logger.log(language);
-      this.logger.log(JSON.stringify(sentiment));
-
-      const instruction = `The customer wrote a ${sentiment.sentiment} feedback about ${sentiment.topic} in ${language}.
-      Please give a short reply in the same language. No need to provide back to English.`;
-      this.logger.log(instruction);
-
-      const options = this.createChatOptions({
-        instruction,
-        feedback,
-      });
-      const chatReply = await this.hfInference.chatCompletion(options);
-
-      const reply = (chatReply.choices[0].message.content || '').trim();
-      this.logger.log(reply);
-
-      return Promise.resolve(reply);
-    } catch (ex) {
-      console.error(ex);
-      throw ex;
-    }
-  }
-
-  private createChatOptions(messages: { instruction: string; feedback: string }) {
-    return {
-      accessToken: env.HUGGINGFACE.API_KEY,
-      model: env.HUGGINGFACE.MODEL_NAME,
-      temperature: 0.1,
-      top_p: 0.5,
-      max_tokens: 1024,
-      messages: [
+      const messages: ChatMessage[] = [
         {
           role: 'user',
-          content: messages.instruction,
+          content: `What is the language used to write the feedback? Give me the language name, no explanation, no formal response.
+          When the feedback is written in Traditional Chinese, return Traditional Chinese. When the feedback is written in 
+          Simplified Chinese, return Simplified Chinese.`,
         },
         {
           role: 'assistant',
@@ -54,33 +25,77 @@ export class AdvisoryFeedbackPromptChainingService {
         },
         {
           role: 'user',
-          content: messages.feedback,
+          content: feedback,
         },
-      ],
-    };
+      ];
+
+      const response = await this.chat(messages);
+      const language = (response.choices[0].message.content || '').replace('.', '').trim();
+      this.logger.log(`language -> ${language}`);
+
+      messages.push(
+        {
+          role: 'assistant',
+          content: language,
+        },
+        {
+          role: 'user',
+          content: `Identify the sentiment of the feedback (positive, neutral, negative). 
+            When the sentiment is positive, return 'POSITIVE', is neutral, return 'NEUTRAL', is negative, return 'NEGATIVE'.
+            Do not provide explanation.`,
+        },
+      );
+
+      const sentimentResponse = await this.chat(messages);
+      const sentiment = (sentimentResponse.choices[0].message.content || '').trim();
+      this.logger.log(`sentiment -> ${sentiment}`);
+
+      messages.push(
+        {
+          role: 'assistant',
+          content: sentiment,
+        },
+        {
+          role: 'user',
+          content: `Identify the topic of the feedback. Keep the number of sub-topics to 3 or less. Do not provide explanation.`,
+        },
+      );
+
+      const topicResponse = await this.chat(messages);
+      const topic = (topicResponse.choices[0].message.content || '').trim();
+      this.logger.log(`topic -> ${topic}`);
+
+      messages.push(
+        {
+          role: 'assistant',
+          content: topic,
+        },
+        {
+          role: 'user',
+          content: `The customer wrote a ${sentiment} feedback about ${topic} in ${language}.
+          Please give a short reply in the same language. Do not do more and provide English translation.`,
+        },
+      );
+
+      const replyResponse = await this.chat(messages);
+      const reply = (replyResponse.choices[0].message.content || '').trim();
+      this.logger.log(reply);
+
+      return reply;
+    } catch (ex) {
+      console.error(ex);
+      throw ex;
+    }
   }
 
-  private async analyseSentinment(feedback: string): Promise<SentimentAnalysis> {
-    const options = this.createChatOptions({
-      instruction: `Identify the sentiment and topic of feedback and return the JSON output { "sentiment": string, "topic": string }.
-      When the sentiment is positive, return 'POSITIVE', is neutral, return 'NEUTRAL', is negative, return 'NEGATIVE'.
-      Keep the sub-topics 3 or less. Do not provide explanation for either fields.
-      `,
-      feedback,
+  private async chat(messages: { role: string; content: string }[]) {
+    return this.hfInference.chatCompletion({
+      accessToken: env.HUGGINGFACE.API_KEY,
+      model: env.HUGGINGFACE.MODEL_NAME,
+      temperature: 0.1,
+      top_p: 0.5,
+      max_tokens: 1024,
+      messages,
     });
-    const chatSentiment = await this.hfInference.chatCompletion(options);
-    const strSentiment = (chatSentiment.choices[0].message.content || '{}').trim();
-    return JSON.parse(strSentiment);
-  }
-
-  private async findLanguage(feedback: string): Promise<string> {
-    const options = this.createChatOptions({
-      instruction: `What is the language used to write the feedback? Give me the language name, no explanation, no formal response.
-      When the feedback is written in Traditional Chinese, return Traditional Chinese. When the feedback is written in 
-      Simplified Chinese, return Simplified Chinese.`,
-      feedback,
-    });
-    const chatLanguage = await this.hfInference.chatCompletion(options);
-    return (chatLanguage.choices[0].message.content || '').replace('.', '').trim();
   }
 }
