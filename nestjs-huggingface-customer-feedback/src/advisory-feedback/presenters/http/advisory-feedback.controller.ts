@@ -42,7 +42,7 @@ export class AdvisoryFeedbackController {
       negativeFeedback: {
         value: {
           prompt:
-            'The ESG platform is full of bugs, not user-friendly, and slow to generate reports to PDF and Word document.',
+            'The ESG platform is full of bugs, not user-friendly, and slow to generate reports to PDF and Word document. I need to reload a specific page, or a temporary slowdown on a certain feature',
         },
       },
       negativeFeedback2: {
@@ -53,7 +53,13 @@ export class AdvisoryFeedbackController {
       },
       positiveChineseFeedback: {
         value: {
-          prompt: 'Diginex的ESG 平台非常棒。我將用它來建立 ESG 報告並推薦其他人訂閱該平台。',
+          prompt: '這個新流程讓我們成功地縮減了至少50%的工時，不僅節省大量時間，也協助我們將報告需求擴展到嶄新境界。',
+        },
+      },
+      positiveChineseFeedback2: {
+        value: {
+          prompt:
+            '資料的完整可追溯性和數位稽核可以深入至儲存格層級，再加上即時變更，讓我們能掌握在報表中更新的動態並提供透明度。',
         },
       },
       positiveSpanishFeedback: {

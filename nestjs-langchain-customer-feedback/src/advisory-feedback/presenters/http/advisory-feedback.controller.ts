@@ -1,34 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AdvisoryFeedbackService } from '~advisory-feedback/application/advisory-feedback.service';
-import { ChainOutput } from '~advisory-feedback/application/types/chain-output.type';
 import { FeedbackDto } from '../dtos/feedback.dto';
-
-const TEST_INPUT_DEFINITION = {
-  description: 'An intance of FeedbackDto',
-  required: true,
-  schema: {
-    type: 'object',
-    properties: {
-      prompt: {
-        type: 'string',
-        description: 'customer feedback',
-      },
-    },
-  },
-  examples: {
-    positiveChineseFeedback: {
-      value: {
-        prompt: 'Diginex的ESG 平台非常棒。我將用它來建立 ESG 報告並推薦其他人訂閱該平台。',
-      },
-    },
-    positiveSpanishFeedback: {
-      value: {
-        prompt: 'La plataforma Diginex es muy útil y poderosa. Lo uso para crear informes y lo recomendaré a otros.',
-      },
-    },
-  },
-};
 
 @ApiTags('Advisory Feedback')
 @Controller('esg-advisory-feedback')
@@ -69,7 +42,7 @@ export class AdvisoryFeedbackController {
       negativeFeedback: {
         value: {
           prompt:
-            'The ESG platform is full of bugs, not user-friendly, and slow to generate reports to PDF and Word document.',
+            'The ESG platform is full of bugs, not user-friendly, and slow to generate reports to PDF and Word document. I need to reload a specific page, or a temporary slowdown on a certain feature',
         },
       },
       negativeFeedback2: {
@@ -80,7 +53,13 @@ export class AdvisoryFeedbackController {
       },
       positiveChineseFeedback: {
         value: {
-          prompt: 'Diginex的ESG 平台非常棒。我將用它來建立 ESG 報告並推薦其他人訂閱該平台。',
+          prompt: '這個新流程讓我們成功地縮減了至少50%的工時，不僅節省大量時間，也協助我們將報告需求擴展到嶄新境界。',
+        },
+      },
+      positiveChineseFeedback2: {
+        value: {
+          prompt:
+            '資料的完整可追溯性和數位稽核可以深入至儲存格層級，再加上即時變更，讓我們能掌握在報表中更新的動態並提供透明度。',
         },
       },
       positiveSpanishFeedback: {
@@ -98,63 +77,5 @@ export class AdvisoryFeedbackController {
   @Post()
   createFeedback(@Body() dto: FeedbackDto): Promise<string> {
     return this.service.generateFeedback(dto.prompt);
-  }
-
-  @ApiBody(TEST_INPUT_DEFINITION)
-  @ApiResponse({
-    description: 'The advisory feedback',
-    schema: {
-      type: 'object',
-      properties: {
-        language: {
-          type: 'string',
-          description: 'language used in the feedback',
-        },
-        sentiment: {
-          type: 'string',
-          description: 'sentiment of the feedback',
-        },
-        topic: {
-          type: 'string',
-          description: 'what the feedback is about',
-        },
-      },
-    },
-    status: 201,
-  })
-  @Post('test-chains')
-  testChains(@Body() dto: FeedbackDto): Promise<ChainOutput> {
-    return this.service.testChains(dto.prompt);
-  }
-
-  @ApiBody(TEST_INPUT_DEFINITION)
-  @ApiResponse({
-    description: 'The advisory feedback',
-    schema: {
-      type: 'object',
-      properties: {
-        language: {
-          type: 'string',
-          description: 'language used in the feedback',
-        },
-        sentiment: {
-          type: 'string',
-          description: 'sentiment of the feedback',
-        },
-        topic: {
-          type: 'string',
-          description: 'what the feedback is about',
-        },
-        feedback: {
-          type: 'string',
-          description: 'the original feedback',
-        },
-      },
-    },
-    status: 201,
-  })
-  @Post('test-runnable-map')
-  testRunnableMap(@Body() dto: FeedbackDto): Promise<Record<string, any>> {
-    return this.service.testRunnableMap(dto.prompt);
   }
 }
