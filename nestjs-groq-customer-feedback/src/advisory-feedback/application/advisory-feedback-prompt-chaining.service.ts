@@ -25,7 +25,9 @@ export class AdvisoryFeedbackPromptChainingService {
         {
           role: 'user',
           content: `Please identify the language used in the feedback. Give me the language name, and nothing else.
-        If the language is Chinese, please say Traditional Chinese or Simplified Chinese. Feedback: ${feedback}
+        If the language is Chinese, please specify Traditional Chinese or Simplified Chinese. 
+        If you do not know the language, give 'Unknown'.
+        Feedback: ${feedback}
         `,
         },
       ];
@@ -60,6 +62,7 @@ export class AdvisoryFeedbackPromptChainingService {
       );
 
       this.logger.log(chainedPrompt);
+      this.logger.log(messages);
       const result = await this.chatbot.create({
         ...MODEL_CONFIG,
         messages,
