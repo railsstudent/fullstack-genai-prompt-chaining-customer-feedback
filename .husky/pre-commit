@@ -6,5 +6,7 @@ cd ../nestjs-langchain-customer-feedback
 npm run pre-commit
 cd ../nestjs-huggingface-customer-feedback
 npm run pre-commit
+cd ../ng-prompt-chaining-demo
+npm run lint
 cd ../
 
