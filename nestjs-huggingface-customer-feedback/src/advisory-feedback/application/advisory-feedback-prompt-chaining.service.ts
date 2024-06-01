@@ -3,6 +3,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { env } from '~configs/env.config';
 import { HUGGINGFACE_INFERENCE } from './constants/huggingface.constant';
 import { ChatMessage } from './types/chat-message.type';
+import { Conversation } from './types/conversation:type';
 
 @Injectable()
 export class AdvisoryFeedbackPromptChainingService {
@@ -13,45 +14,37 @@ export class AdvisoryFeedbackPromptChainingService {
   async generateFeedback(feedback: string): Promise<string> {
     try {
       const messages: ChatMessage[] = [];
-      this.appendMessages(
-        messages,
-        '',
-        `What is the language used to write the feedback? Give me the language name, no explanation, no formal response.
+      this.appendMessages(messages, {
+        query: `What is the language used to write the feedback? Give me the language name, no explanation, no formal response.
       When the feedback is written in Traditional Chinese, return Traditional Chinese. When the feedback is written in 
       Simplified Chinese, return Simplified Chinese.`,
-      );
-      this.appendMessages(messages, 'What is the feedback?', feedback);
+      });
+      this.appendMessages(messages, { previousAnswer: 'What is the feedback?', query: feedback });
 
       const response = await this.chat(messages);
       const language = response.replace('.', '');
       this.logger.log(`language -> ${language}`);
 
-      this.appendMessages(
-        messages,
-        language,
-        `Identify the sentiment of the feedback (positive, neutral, negative). 
+      this.appendMessages(messages, {
+        previousAnswer: language,
+        query: `Identify the sentiment of the feedback (positive, neutral, negative). 
       When the sentiment is positive, return 'POSITIVE', is neutral, return 'NEUTRAL', is negative, return 'NEGATIVE'.
       Do not provide explanation.`,
-      );
-
+      });
       const sentiment = await this.chat(messages);
       this.logger.log(`sentiment -> ${sentiment}`);
 
-      this.appendMessages(
-        messages,
-        sentiment,
-        `Identify the topic of the feedback. Keep the number of sub-topics to 3 or less. Do not provide explanation.`,
-      );
-
+      this.appendMessages(messages, {
+        previousAnswer: sentiment,
+        query: `Identify the topic of the feedback. Keep the number of sub-topics to 3 or less. Do not provide explanation.`,
+      });
       const topic = await this.chat(messages);
       this.logger.log(`topic -> ${topic}`);
 
-      this.appendMessages(
-        messages,
-        topic,
-        `The customer wrote a ${sentiment} feedback about ${topic} in ${language}. Please give a short reply in the same language. Do not do more and provide English translation.`,
-      );
-
+      this.appendMessages(messages, {
+        previousAnswer: topic,
+        query: `The customer wrote a ${sentiment} feedback about ${topic} in ${language}. Please give a short reply in the same language. Do not do more and provide English translation.`,
+      });
       const reply = await this.chat(messages);
       this.logger.log(reply);
 
@@ -62,19 +55,18 @@ export class AdvisoryFeedbackPromptChainingService {
     }
   }
 
-  private appendMessages(messages: ChatMessage[], response: string, query: string): void {
-    if (response) {
+  private appendMessages(messages: ChatMessage[], { previousAnswer = '', query }: Conversation): void {
+    if (previousAnswer) {
       messages.push({
         role: 'assistant',
-        content: response,
+        content: previousAnswer,
       });
     }
-    if (query) {
-      messages.push({
-        role: 'user',
-        content: query,
-      });
-    }
+
+    messages.push({
+      role: 'user',
+      content: query,
+    });
   }
 
   private async chat(messages: ChatMessage[]): Promise<string> {
