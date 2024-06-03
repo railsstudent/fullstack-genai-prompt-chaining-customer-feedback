@@ -10,8 +10,8 @@ import { ReplyService } from '../services/reply.service';
   imports: [FormsModule],
   template: `
     <div>
-      <span>Technical Stack: </span> 
-      <span>{{ technicalStack() }}</span>
+      <span>Generative AI Stack: </span> 
+      <span>{{ generativeAIStack() }}</span>
     </div>
     <p>Feedback: </p>
     <textarea rows="10" [(ngModel)]="feedback" ></textarea>
@@ -40,7 +40,7 @@ import { ReplyService } from '../services/reply.service';
   providers: [ReplyService]
 })
 export class ReplyComponent {
-  technicalStack = input<string>('technicalStack');
+  generativeAIStack = input<string>('technicalStack');
   feedback = signal<string>('');
   reply = signal('');
   isLoading = signal(false)

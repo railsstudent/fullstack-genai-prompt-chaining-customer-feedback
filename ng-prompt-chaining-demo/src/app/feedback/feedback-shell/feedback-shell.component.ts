@@ -12,9 +12,9 @@ import { RouterLink, RouterOutlet } from '@angular/router';
         <p>Menu</p>
         <ul>
           <li><a routerLink="gemini">Gemini</a></li>
-          <li><a routerLink="groq">Groq</a></li>
-          <li><a routerLink="huggingface">Hugginface</a></li>
-          <li><a routerLink="langchain">Langchain</a></li>
+          <li><a routerLink="groq">Groq + gemma 7b</a></li>
+          <li><a routerLink="huggingface">Hugginface JS + Mixtrial</a></li>
+          <li><a routerLink="langchain">Langchain.js + Gemini</a></li>
         </ul>
       </nav>
       <div class="main">
