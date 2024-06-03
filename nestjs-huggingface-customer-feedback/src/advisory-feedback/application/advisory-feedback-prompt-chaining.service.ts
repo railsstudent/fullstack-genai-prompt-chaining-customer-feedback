@@ -73,7 +73,7 @@ export class AdvisoryFeedbackPromptChainingService {
     const response = await this.hfInference.chatCompletion({
       accessToken: env.HUGGINGFACE.API_KEY,
       model: env.HUGGINGFACE.MODEL_NAME,
-      temperature: 0.1,
+      temperature: 0.5,
       top_p: 0.5,
       max_tokens: 1024,
       messages,

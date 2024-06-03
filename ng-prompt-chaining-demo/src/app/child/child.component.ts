@@ -1,7 +1,7 @@
-import { Component, effect, inject, input, output, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import { outputToObservable } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { filter, switchMap } from 'rxjs';
+import { filter, finalize, switchMap, tap } from 'rxjs';
 import { ReplyService } from './services/reply.service';
 
 @Component({
@@ -14,14 +14,15 @@ import { ReplyService } from './services/reply.service';
       <span>{{ technicalStack() }}</span>
     </div>
     <p>Feedback: </p>
-    <textarea rows="15" [(ngModel)]="feedback" ></textarea>
+    <textarea rows="10" [(ngModel)]="feedback" ></textarea>
     <div>
-      <button (click)="clicked.emit()">Send</button>
+      <button (click)="clicked.emit()" [disabled]="vm.isLoading">{{ vm.buttonText }}</button>
     </div>
-    <p>{{ reply() }}</p>
+    <p>Reply: </p>
+    <p>{{ vm.reply }}</p>
   `,
   styles: `
-    p {
+    p, div span {
       font-size: 1.2rem;
     }
 
@@ -34,10 +35,6 @@ import { ReplyService } from './services/reply.service';
       span:first-child {
         color: #aaa;
       }
-
-      span {
-        font-size: 1.25rem;
-      }
     }
   `,
   providers: [ReplyService]
@@ -45,13 +42,18 @@ import { ReplyService } from './services/reply.service';
 export class ChildComponent {
   technicalStack = input<string>('technicalStack');
   feedback = signal<string>('');
+  reply = signal('');
+  isLoading = signal(false)
   clicked = output();
   replyService = inject(ReplyService);
-  reply = signal<string>('');
+  buttonText = computed(() => this.isLoading() ? 'Generating...' : 'Send'); 
 
   get vm() {
     return {
       feedback: this.feedback(),
+      isLoading: this.isLoading(),
+      buttonText: this.buttonText(),
+      reply: this.reply(),
     };
   }
 
@@ -60,10 +62,14 @@ export class ChildComponent {
       const sub = outputToObservable(this.clicked)
         .pipe(
           filter(() => this.vm.feedback !== undefined && this.vm.feedback.trim() !== ''),
-          switchMap(() => this.replyService.getReply(this.vm.feedback)),
-        ).subscribe((aiReply) => {
-          this.reply.set(aiReply);
-        });
+          tap(() => { 
+            this.isLoading.set(true);
+            this.reply.set('');
+          }),
+          switchMap(() => this.replyService.getReply(this.vm.feedback)
+            .pipe(finalize(() => this.isLoading.set(false)))
+          ),
+        ).subscribe((aiReply) => this.reply.set(aiReply));
      
       cleanUp(() => sub.unsubscribe());
     });

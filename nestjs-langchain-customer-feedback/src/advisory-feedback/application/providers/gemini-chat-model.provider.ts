@@ -28,7 +28,7 @@ export const GeminiChatModelProvider: Provider<ChatGoogleGenerativeAI> = {
           threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
         },
       ],
-      temperature: 0,
+      temperature: 0.5,
       topK: 10,
       topP: 0.5,
       maxOutputTokens: 2048,
