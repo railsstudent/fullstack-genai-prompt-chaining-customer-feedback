@@ -20,7 +20,7 @@ export const SAFETY_SETTINGS: SafetySetting[] = [
 ];
 
 export const GENERATION_CONFIG: GenerationConfig = {
-  temperature: 0,
+  temperature: 0.5,
   topK: 10,
   topP: 0.5,
   maxOutputTokens: 2048,
