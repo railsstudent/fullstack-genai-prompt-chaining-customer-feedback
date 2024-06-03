@@ -3,7 +3,7 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
     {
         path: 'customer',
-        loadChildren: () => import('./parent/parent.routes').then((m) => m.CUSTOMER_ROUTES)
+        loadChildren: () => import('./feedback/feedback.routes').then((m) => m.CUSTOMER_ROUTES)
     },
     {
         path: '',

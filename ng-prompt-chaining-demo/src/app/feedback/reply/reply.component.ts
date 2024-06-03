@@ -2,10 +2,10 @@ import { Component, computed, effect, inject, input, output, signal } from '@ang
 import { outputToObservable } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { filter, finalize, switchMap, tap } from 'rxjs';
-import { ReplyService } from './services/reply.service';
+import { ReplyService } from '../services/reply.service';
 
 @Component({
-  selector: 'app-child',
+  selector: 'app-reply',
   standalone: true,
   imports: [FormsModule],
   template: `
@@ -39,7 +39,7 @@ import { ReplyService } from './services/reply.service';
   `,
   providers: [ReplyService]
 })
-export class ChildComponent {
+export class ReplyComponent {
   technicalStack = input<string>('technicalStack');
   feedback = signal<string>('');
   reply = signal('');

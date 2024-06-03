@@ -1,17 +1,17 @@
 import { Route } from "@angular/router";
 import { BACKEND_URL } from '~app/app.constant';
-import { ChildComponent } from "../child/child.component";
-import { ParentComponent } from "./parent.component";
+import { ReplyComponent } from "./reply/reply.component";
+import { FeedbackShellComponent } from './feedback-shell/feedback-shell.component';
 
 export const CUSTOMER_ROUTES: Route[] = [
   {
     path: '',
-    component: ParentComponent,
+    component: FeedbackShellComponent,
     children: [
       {
         path: 'gemini',
         title: 'Gemini',
-        component: ChildComponent,
+        component: ReplyComponent,
         data: {
           technicalStack: 'Google Gemini API and gemini-1.5-pro-latest model'
         },
@@ -25,7 +25,7 @@ export const CUSTOMER_ROUTES: Route[] = [
       {
         path: 'groq',
         title: 'Groq',
-        component: ChildComponent,
+        component: ReplyComponent,
         data: {
           technicalStack: 'Groq Cloud and gemma-7b-it model'
         },
@@ -39,7 +39,7 @@ export const CUSTOMER_ROUTES: Route[] = [
       {
         path: 'huggingface',
         title: 'Huggingface',
-        component: ChildComponent,
+        component: ReplyComponent,
         data: {
           technicalStack: 'huggingface.js and Mistral-7B-Instruct-v0.2 model'
         },
@@ -53,7 +53,7 @@ export const CUSTOMER_ROUTES: Route[] = [
       {
         path: 'langchain',
         title: 'Langchain',
-        component: ChildComponent,
+        component: ReplyComponent,
         data: {
           technicalStack: 'Langchain.js and gemini-1.5-pro-latest model'
         },

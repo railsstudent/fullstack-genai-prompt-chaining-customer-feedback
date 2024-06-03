@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
-  selector: 'app-parent',
+  selector: 'app-feedback-shell',
   standalone: true,
   imports: [RouterOutlet, RouterLink],
   template: `
@@ -73,4 +73,4 @@ import { RouterLink, RouterOutlet } from '@angular/router';
     }
   `
 })
-export class ParentComponent {}
+export class FeedbackShellComponent {}
