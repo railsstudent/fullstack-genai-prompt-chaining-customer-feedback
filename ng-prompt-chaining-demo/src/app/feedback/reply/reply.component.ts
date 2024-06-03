@@ -1,75 +1,39 @@
-import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
-import { outputToObservable } from '@angular/core/rxjs-interop';
-import { FormsModule } from '@angular/forms';
-import { filter, finalize, switchMap, tap } from 'rxjs';
+import { Component, effect, input, signal, viewChild } from '@angular/core';
 import { ReplyService } from '../services/reply.service';
+import { FeedbackSendComponent } from './feedback-send/feedback-send.component';
+import { ReplyHeadComponent } from './reply-head/reply-head.component';
+import { ReplyTextComponent } from './reply-text/reply-text.component';
+import { outputToObservable } from '@angular/core/rxjs-interop';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-reply',
   standalone: true,
-  imports: [FormsModule],
+  imports: [ReplyHeadComponent, FeedbackSendComponent, ReplyTextComponent],
   template: `
-    <div>
-      <span>Generative AI Stack: </span> 
-      <span>{{ generativeAIStack() }}</span>
-    </div>
-    <p>Feedback: </p>
-    <textarea rows="10" [(ngModel)]="feedback" ></textarea>
-    <div>
-      <button (click)="clicked.emit()" [disabled]="vm.isLoading">{{ vm.buttonText }}</button>
-    </div>
-    <p>Reply: </p>
-    <p>{{ vm.reply }}</p>
+    <app-reply-head class="head" [generativeAiStack]="generativeAiStack()" />
+    <app-feedback-send [(isLoading)]="isLoading" />
+    <app-reply-text [feedback]="feedback()" [(isLoading)]="isLoading" />
   `,
   styles: `
-    p, div span {
-      font-size: 1.2rem;
-    }
-
-    textarea {
-      width: 90%;
-    }
-
-    div {
+    app-reply-head.head, app-feedback-send {
       margin-bottom: 1rem;
-      span:first-child {
-        color: #aaa;
-      }
     }
   `,
   providers: [ReplyService]
 })
 export class ReplyComponent {
-  generativeAIStack = input<string>('technicalStack');
-  feedback = signal<string>('');
-  reply = signal('');
+  generativeAiStack = input<string>('');
+  feedbackSend = viewChild.required(FeedbackSendComponent);
   isLoading = signal(false)
-  clicked = output();
-  replyService = inject(ReplyService);
-  buttonText = computed(() => this.isLoading() ? 'Generating...' : 'Send'); 
-
-  get vm() {
-    return {
-      feedback: this.feedback(),
-      isLoading: this.isLoading(),
-      buttonText: this.buttonText(),
-      reply: this.reply(),
-    };
-  }
+  feedback = signal('');
 
   constructor() {
     effect((cleanUp) => { 
-      const sub = outputToObservable(this.clicked)
+      const sub = outputToObservable(this.feedbackSend().clicked)
         .pipe(
-          filter(() => this.vm.feedback !== undefined && this.vm.feedback.trim() !== ''),
-          tap(() => { 
-            this.isLoading.set(true);
-            this.reply.set('');
-          }),
-          switchMap(() => this.replyService.getReply(this.vm.feedback)
-            .pipe(finalize(() => this.isLoading.set(false)))
-          ),
-        ).subscribe((aiReply) => this.reply.set(aiReply));
+          filter(({ feedback }) => feedback !== undefined && feedback.trim() !== ''),
+        ).subscribe(({ feedback }) => this.feedback.set(feedback));
      
       cleanUp(() => sub.unsubscribe());
     });

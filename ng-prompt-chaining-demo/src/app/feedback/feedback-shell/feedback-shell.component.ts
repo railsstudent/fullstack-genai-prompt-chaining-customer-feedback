@@ -68,7 +68,6 @@ import { RouterLink, RouterOutlet } from '@angular/router';
       grid-column: 2 / 3;
       grid-row: -1 / -2;
 
-      padding-top: 1rem;
       padding-left: 0.5rem;
     }
   `

@@ -13,7 +13,7 @@ export const CUSTOMER_ROUTES: Route[] = [
         title: 'Gemini',
         component: ReplyComponent,
         data: {
-          technicalStack: 'Google Gemini API and gemini-1.5-pro-latest model'
+          generativeAiStack: 'Google Gemini API and gemini-1.5-pro-latest model'
         },
         providers: [
           {
@@ -27,7 +27,7 @@ export const CUSTOMER_ROUTES: Route[] = [
         title: 'Groq',
         component: ReplyComponent,
         data: {
-          technicalStack: 'Groq Cloud and gemma-7b-it model'
+          generativeAiStack: 'Groq Cloud and gemma-7b-it model'
         },
         providers: [
           {
@@ -41,7 +41,7 @@ export const CUSTOMER_ROUTES: Route[] = [
         title: 'Huggingface',
         component: ReplyComponent,
         data: {
-          technicalStack: 'huggingface.js and Mistral-7B-Instruct-v0.2 model'
+          generativeAiStack: 'huggingface.js and Mistral-7B-Instruct-v0.2 model'
         },
         providers: [
           {
@@ -55,7 +55,7 @@ export const CUSTOMER_ROUTES: Route[] = [
         title: 'Langchain',
         component: ReplyComponent,
         data: {
-          technicalStack: 'Langchain.js and gemini-1.5-pro-latest model'
+          generativeAiStack: 'Langchain.js and gemini-1.5-pro-latest model'
         },
         providers: [
           {
