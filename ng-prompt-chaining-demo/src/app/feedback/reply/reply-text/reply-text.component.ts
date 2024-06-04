@@ -18,8 +18,8 @@ import { ReplyService } from '~app/feedback/services/reply.service';
 })
 export class ReplyTextComponent {
   feedback = input.required<string>();
-  reply = signal('');
   isLoading = model.required<boolean>();
+  reply = signal('');
   replyService = inject(ReplyService);
 
   constructor() {

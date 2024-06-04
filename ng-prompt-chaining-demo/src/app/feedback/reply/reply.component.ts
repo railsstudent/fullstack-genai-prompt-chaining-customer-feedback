@@ -1,10 +1,9 @@
 import { Component, effect, input, signal, viewChild } from '@angular/core';
-import { ReplyService } from '../services/reply.service';
+import { outputToObservable } from '@angular/core/rxjs-interop';
+import { filter } from 'rxjs';
 import { FeedbackSendComponent } from './feedback-send/feedback-send.component';
 import { ReplyHeadComponent } from './reply-head/reply-head.component';
 import { ReplyTextComponent } from './reply-text/reply-text.component';
-import { outputToObservable } from '@angular/core/rxjs-interop';
-import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-reply',
@@ -20,7 +19,6 @@ import { filter } from 'rxjs';
       margin-bottom: 1rem;
     }
   `,
-  providers: [ReplyService]
 })
 export class ReplyComponent {
   generativeAiStack = input<string>('');
