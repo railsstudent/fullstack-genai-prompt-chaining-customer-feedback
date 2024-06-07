@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./nestjs-customer-feedback
+      dockerfile: Dockerfile
+    environment:
+      - PORT=${GEMINI_PORT}
+      - GOOGLE_GEMINI_API_KEY=${GOOGLE_GEMINI_API_KEY}
+      - GOOGLE_GEMINI_MODEL=${GOOGLE_GEMINI_MODEL}
+    ports:
+      - "${GEMINI_PORT}:${GEMINI_PORT}"
+    networks:
+      - ai
+    restart: unless-stopped
+  backend2:
+    build:
+      context: ./nestjs-groq-customer-feedback
+      dockerfile: Dockerfile
+    environment:
+      - PORT=${GROQ_PORT}
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - GROQ_MODEL=${GROQ_MODEL}
+    ports:
+      - "${GROQ_PORT}:${GROQ_PORT}"
+    networks:
+      - ai
+    restart: unless-stopped
+  backend3:
+    build:
+      context: ./nestjs-huggingface-customer-feedback
+      dockerfile: Dockerfile
+    environment:
+      - PORT=${HUGGINGFACE_PORT}
+      - GOOGLE_GEMINI_API_KEY=${GOOGLE_GEMINI_API_KEY}
+      - GOOGLE_GEMINI_MODEL=${GOOGLE_GEMINI_MODEL}
+    ports:
+      - "${HUGGINGFACE_PORT}:${HUGGINGFACE_PORT}"
+    networks:
+      - ai
+    restart: unless-stopped
+  backend4:
+    build:
+      context: ./nestjs-langchain-customer-feedback
+      dockerfile: Dockerfile
+    environment:
+      - PORT=${LANGCHAIN_PORT}
+      - GOOGLE_GEMINI_API_KEY=${GOOGLE_GEMINI_API_KEY}
+      - GOOGLE_GEMINI_MODEL=${GOOGLE_GEMINI_MODEL}
+    ports:
+      - "${LANGCHAIN_PORT}:${LANGCHAIN_PORT}"
+    networks:
+      - ai
+    restart: unless-stopped
+  web:
+    build:
+      context: ./ng-prompt-chaining-demo
+      dockerfile: Dockerfile
+    depends_on:
+      - backend
+    ports:
+      - "${WEB_PORT}:${WEB_PORT}"
+    networks:
+      - ai
+    restart: unless-stopped
+networks:
+  ai:
