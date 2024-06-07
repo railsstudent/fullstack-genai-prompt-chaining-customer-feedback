@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, input, model, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, Injector, input, model, OnInit, runInInjectionContext, signal } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { finalize, switchMap, tap } from 'rxjs';
 import { ReplyService } from '~app/feedback/services/reply.service';
@@ -15,6 +15,7 @@ import { ReplyService } from '~app/feedback/services/reply.service';
       font-size: 1.2rem;
     }
   `,
+  providers: [ReplyService]
 })
 export class ReplyTextComponent implements OnInit {
   feedback = input.required<string>();
@@ -22,16 +23,20 @@ export class ReplyTextComponent implements OnInit {
   reply = signal('');
   replyService = inject(ReplyService);
   destroyRef$ = inject(DestroyRef);
+  injector = inject(Injector);
 
   ngOnInit(): void {
-    toObservable(this.feedback)
-      .pipe(
-        tap(() => this.reply.set('')),
-        switchMap(() => this.replyService.getReply(this.feedback())
-          .pipe(finalize(() => this.isLoading.set(false)))
-        ),
-        takeUntilDestroyed(this.destroyRef$),
-      )
-      .subscribe((aiReply) => this.reply.set(aiReply));
+    runInInjectionContext(this.injector, () => {
+      toObservable(this.feedback)
+        .pipe(
+          // filter((feedback) => typeof feedback !== 'undefined' && feedback !== ''),
+          tap(() => this.reply.set('')),
+          switchMap(() => this.replyService.getReply(this.feedback())
+            .pipe(finalize(() => this.isLoading.set(false)))
+          ),
+          takeUntilDestroyed(this.destroyRef$),
+        )
+        .subscribe((aiReply) => this.reply.set(aiReply));
+    });
   }
 }
