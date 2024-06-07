@@ -1,8 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { catchError, delay, Observable, of, retry } from 'rxjs';
+import { catchError, Observable, of, retry } from 'rxjs';
 import { BACKEND_URL } from '~app/app.constant';
-
 
 @Injectable()
 export class ReplyService {
@@ -10,17 +9,18 @@ export class ReplyService {
   private readonly backendUrl = inject(BACKEND_URL); 
 
   getReply(prompt: string): Observable<string> {
+    if (typeof prompt === 'undefined' || prompt.trim() !== '') {
+      return of('');
+    }
+
     return this.httpClient.post(`${this.backendUrl}/esg-advisory-feedback`, { prompt }, {
       responseType: 'text'
     }).pipe(
-      retry(3),
-      delay(500),
+      retry({ count: 3, delay: 500 }),
       catchError((err) => {
         console.error(err);
-        if (err instanceof Error) {
-          return of(err.message);
-        }
-        return of('Error occurs when generating reply');
+        return (err instanceof Error) ? of(err.message)
+          : of('Error occurs when generating reply');
       })
     );
   }

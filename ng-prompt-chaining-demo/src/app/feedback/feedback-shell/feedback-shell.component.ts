@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-feedback-shell',
@@ -70,6 +70,13 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 
       padding-left: 0.5rem;
     }
-  `
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FeedbackShellComponent {}
+export class FeedbackShellComponent {
+  router = inject(Router);
+  
+  constructor() {
+    this.router.navigate(['gemini']);
+  }
+}

@@ -1,6 +1,6 @@
-import { Component, DestroyRef, inject, Injector, input, model, OnInit, runInInjectionContext, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, Injector, input, model, OnInit, runInInjectionContext, signal } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { finalize, switchMap, tap } from 'rxjs';
+import { filter, finalize, switchMap, tap } from 'rxjs';
 import { ReplyService } from '~app/feedback/services/reply.service';
 
 @Component({
@@ -15,7 +15,8 @@ import { ReplyService } from '~app/feedback/services/reply.service';
       font-size: 1.2rem;
     }
   `,
-  providers: [ReplyService]
+  providers: [ReplyService],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReplyTextComponent implements OnInit {
   feedback = input.required<string>();
@@ -25,11 +26,32 @@ export class ReplyTextComponent implements OnInit {
   destroyRef$ = inject(DestroyRef);
   injector = inject(Injector);
 
+  // constructor() {
+  //   effect((onCleanup) => {
+  //     runInInjectionContext(this.injector, () => {
+  //       toObservable(this.feedback)
+  //         .pipe(
+  //           tap((feedback) => console.log('in replyText', feedback)),
+  //           filter((feedback) => typeof feedback !== 'undefined' && feedback !== ''),
+  //           tap(() => this.reply.set('')),
+  //           switchMap(() => this.replyService.getReply(this.feedback())
+  //             .pipe(finalize(() => this.isLoading.set(false)))
+  //           ),
+  //           takeUntilDestroyed(this.destroyRef$),
+  //         )
+  //         .subscribe((aiReply) => this.reply.set(aiReply));
+  //     });
+
+  //     onCleanup(() => {});
+  //   });
+  // }
+
   ngOnInit(): void {
     runInInjectionContext(this.injector, () => {
       toObservable(this.feedback)
         .pipe(
-          // filter((feedback) => typeof feedback !== 'undefined' && feedback !== ''),
+          tap((feedback) => console.log('in replyText', feedback)),
+          filter((feedback) => typeof feedback !== 'undefined' && feedback !== ''),
           tap(() => this.reply.set('')),
           switchMap(() => this.replyService.getReply(this.feedback())
             .pipe(finalize(() => this.isLoading.set(false)))

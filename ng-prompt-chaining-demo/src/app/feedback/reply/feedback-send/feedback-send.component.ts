@@ -1,4 +1,4 @@
-import { Component, computed, model, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, model, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -25,6 +25,7 @@ import { FormsModule } from '@angular/forms';
       width: 90%;
     }  
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FeedbackSendComponent {
   feedback = signal('');

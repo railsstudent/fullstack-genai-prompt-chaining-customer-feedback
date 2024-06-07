@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 @Component({
   selector: 'app-reply-head',
@@ -22,6 +22,7 @@ import { Component, input } from '@angular/core';
       color: #aaa;
     }
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReplyHeadComponent {
   generativeAiStack = input<string>('');

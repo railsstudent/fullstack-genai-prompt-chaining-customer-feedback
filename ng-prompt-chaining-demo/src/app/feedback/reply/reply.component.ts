@@ -1,4 +1,4 @@
-import { Component, effect, input, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, input, signal, viewChild } from '@angular/core';
 import { outputToObservable } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs';
 import { FeedbackSendComponent } from './feedback-send/feedback-send.component';
@@ -19,6 +19,7 @@ import { ReplyTextComponent } from './reply-text/reply-text.component';
       margin-bottom: 1rem;
     }
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReplyComponent {
   generativeAiStack = input<string>('');
