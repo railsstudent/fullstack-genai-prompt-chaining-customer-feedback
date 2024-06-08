@@ -1,22 +1,28 @@
-import { ChangeDetectionStrategy, Component, effect, input, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, input, signal, viewChild } from '@angular/core';
 import { outputToObservable } from '@angular/core/rxjs-interop';
-import { filter } from 'rxjs';
+import { filter, finalize, map, switchMap, tap } from 'rxjs';
+import { ReplyService } from '../services/reply.service';
 import { FeedbackSendComponent } from './feedback-send/feedback-send.component';
 import { ReplyHeadComponent } from './reply-head/reply-head.component';
-import { ReplyTextComponent } from './reply-text/reply-text.component';
 
 @Component({
   selector: 'app-reply',
   standalone: true,
-  imports: [ReplyHeadComponent, FeedbackSendComponent, ReplyTextComponent],
+  imports: [ReplyHeadComponent, FeedbackSendComponent],
+  providers: [ReplyService],
   template: `
     <app-reply-head class="head" [generativeAiStack]="generativeAiStack()" />
     <app-feedback-send [(isLoading)]="isLoading" />
-    <app-reply-text [feedback]="feedback()" [(isLoading)]="isLoading" />
+    <p>Reply: </p>
+    <p>{{ reply() }}</p>
   `,
   styles: `
     app-reply-head.head, app-feedback-send {
       margin-bottom: 1rem;
+    }
+
+    p {
+      font-size: 1.2rem;
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,13 +32,21 @@ export class ReplyComponent {
   feedbackSend = viewChild.required(FeedbackSendComponent);
   isLoading = signal(false)
   feedback = signal('');
+  reply = signal('');
+  replyService = inject(ReplyService);
 
   constructor() {
     effect((cleanUp) => { 
       const sub = outputToObservable(this.feedbackSend().clicked)
         .pipe(
-          filter(({ feedback }) => feedback !== undefined && feedback.trim() !== ''),
-        ).subscribe(({ feedback }) => this.feedback.set(feedback));
+          filter(({ feedback }) => typeof feedback !== 'undefined' && feedback.trim() !== ''),
+          map(({ feedback }) => feedback.trim()),
+          tap(() => this.reply.set('')),
+          switchMap((feedback) => this.replyService.getReply(feedback)
+            .pipe(finalize(() => this.isLoading.set(false)))
+          ),
+        )
+        .subscribe((aiReply) => this.reply.set(aiReply));
      
       cleanUp(() => sub.unsubscribe());
     });
