@@ -26,26 +26,6 @@ export class ReplyTextComponent implements OnInit {
   destroyRef$ = inject(DestroyRef);
   injector = inject(Injector);
 
-  // constructor() {
-  //   effect((onCleanup) => {
-  //     runInInjectionContext(this.injector, () => {
-  //       toObservable(this.feedback)
-  //         .pipe(
-  //           tap((feedback) => console.log('in replyText', feedback)),
-  //           filter((feedback) => typeof feedback !== 'undefined' && feedback !== ''),
-  //           tap(() => this.reply.set('')),
-  //           switchMap(() => this.replyService.getReply(this.feedback())
-  //             .pipe(finalize(() => this.isLoading.set(false)))
-  //           ),
-  //           takeUntilDestroyed(this.destroyRef$),
-  //         )
-  //         .subscribe((aiReply) => this.reply.set(aiReply));
-  //     });
-
-  //     onCleanup(() => {});
-  //   });
-  // }
-
   ngOnInit(): void {
     runInInjectionContext(this.injector, () => {
       toObservable(this.feedback)
@@ -53,7 +33,7 @@ export class ReplyTextComponent implements OnInit {
           tap((feedback) => console.log('in replyText', feedback)),
           filter((feedback) => typeof feedback !== 'undefined' && feedback !== ''),
           tap(() => this.reply.set('')),
-          switchMap(() => this.replyService.getReply(this.feedback())
+          switchMap((feedback) => this.replyService.getReply(feedback)
             .pipe(finalize(() => this.isLoading.set(false)))
           ),
           takeUntilDestroyed(this.destroyRef$),

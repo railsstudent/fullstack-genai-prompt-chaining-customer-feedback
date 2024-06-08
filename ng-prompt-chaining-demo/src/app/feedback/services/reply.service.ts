@@ -9,10 +9,6 @@ export class ReplyService {
   private readonly backendUrl = inject(BACKEND_URL); 
 
   getReply(prompt: string): Observable<string> {
-    if (typeof prompt === 'undefined' || prompt.trim() !== '') {
-      return of('');
-    }
-
     return this.httpClient.post(`${this.backendUrl}/esg-advisory-feedback`, { prompt }, {
       responseType: 'text'
     }).pipe(
