@@ -75,7 +75,7 @@ export class AdvisoryFeedbackController {
     status: 201,
   })
   @Post()
-  createFeedback(@Body() dto: FeedbackDto): Promise<string> {
-    return this.service.generateFeedback(dto.prompt);
+  generateReply(@Body() dto: FeedbackDto): Promise<string> {
+    return this.service.generateReply(dto.prompt);
   }
 }
