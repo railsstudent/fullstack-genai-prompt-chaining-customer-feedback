@@ -1,7 +1,7 @@
 import { GenerativeModel } from '@google/generative-ai';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import {
-  GEMINI_ADVISORY_FEEDBACK_MODEL,
+  GEMINI_REPLY_MODEL,
   GEMINI_FIND_LANGUAGE_MODEL,
   GEMINI_SENTIMENT_ANALYSIS_MODEL,
 } from './constants/gemini.constant';
@@ -13,11 +13,11 @@ export class AdvisoryFeedbackPromptChainingService {
 
   constructor(
     @Inject(GEMINI_SENTIMENT_ANALYSIS_MODEL) private analysisModel: GenerativeModel,
-    @Inject(GEMINI_ADVISORY_FEEDBACK_MODEL) private feedbackModel: GenerativeModel,
+    @Inject(GEMINI_REPLY_MODEL) private replyModel: GenerativeModel,
     @Inject(GEMINI_FIND_LANGUAGE_MODEL) private findLanguageModel: GenerativeModel,
   ) {}
 
-  async generateFeedback(prompt: string): Promise<string> {
+  async generateReply(prompt: string): Promise<string> {
     try {
       const [analysis, language] = await Promise.all([this.analyseSentinment(prompt), this.findLanguage(prompt)]);
       const { sentiment, topic } = analysis;
@@ -27,7 +27,7 @@ export class AdvisoryFeedbackPromptChainingService {
       `;
 
       this.logger.log(chainedPrompt);
-      const result = await this.feedbackModel.generateContent(chainedPrompt);
+      const result = await this.replyModel.generateContent(chainedPrompt);
       const response = await result.response;
       const text = response.text();
       this.logger.log(text);
