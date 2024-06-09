@@ -11,7 +11,7 @@ export class AdvisoryFeedbackPromptChainingService {
 
   constructor(@Inject(HUGGINGFACE_INFERENCE) private hfInference: HfInference) {}
 
-  async generateFeedback(feedback: string): Promise<string> {
+  async generateReply(feedback: string): Promise<string> {
     try {
       const messages: ChatMessage[] = [];
       this.appendMessages(messages, {

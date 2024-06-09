@@ -36,10 +36,10 @@ export class Bootstrap {
 
   setupSwagger() {
     const config = new DocumentBuilder()
-      .setTitle('ESG Advisory Feedback with Prompt Chaining ')
+      .setTitle('ESG Advisory Reply with Langchain multiple chains and Gemini')
       .setDescription('Integrate with Gemini to improve ESG advisory feebacking by prompt chaining')
       .setVersion('1.0')
-      .addTag('Gemini API, Gemini 1.5 Pro Model, Prompt Chaining')
+      .addTag('Langchain, Gemini 1.5 Pro Model, Multiple Chains')
       .build();
     const document = SwaggerModule.createDocument(this.app, config);
     SwaggerModule.setup('api', this.app, document);

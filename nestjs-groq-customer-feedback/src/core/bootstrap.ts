@@ -36,10 +36,10 @@ export class Bootstrap {
 
   setupSwagger() {
     const config = new DocumentBuilder()
-      .setTitle('ESG Advisory Feedback with Prompt Chaining ')
+      .setTitle('ESG Advisory Feedback with Groq and Gemma')
       .setDescription('Integrate with Gemini to improve ESG advisory feebacking by prompt chaining')
       .setVersion('1.0')
-      .addTag('Groq, gemma-7b-it model, Prompt Chaining')
+      .addTag('Groq, Gemma, Prompt Chaining')
       .build();
     const document = SwaggerModule.createDocument(this.app, config);
     SwaggerModule.setup('api', this.app, document);

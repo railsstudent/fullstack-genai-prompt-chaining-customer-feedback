@@ -36,12 +36,12 @@ export class Bootstrap {
 
   setupSwagger() {
     const config = new DocumentBuilder()
-      .setTitle('ESG Advisory Feedback with Prompt Chaining ')
+      .setTitle('ESG Advisory Feedback with Huggingface')
       .setDescription(
-        'Integrate with HuggingFace and Gemma model to improve ESG advisory feebacking by prompt chaining',
+        'Integrate with HuggingFace and Mixtrial model to improve ESG advisory feebacking by prompt chaining',
       )
       .setVersion('1.0')
-      .addTag('HuggingFace, Gemma, Prompt Chaining')
+      .addTag('Huggingface, Mixtrial, Prompt Chaining')
       .build();
     const document = SwaggerModule.createDocument(this.app, config);
     SwaggerModule.setup('api', this.app, document);
