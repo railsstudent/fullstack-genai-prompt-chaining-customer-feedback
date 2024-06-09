@@ -6,8 +6,8 @@ import { ChainOutput } from './types/chain-output.type';
 export class AdvisoryFeedbackService {
   constructor(private promptChainingService: AdvisoryFeedbackPromptChainingService) {}
 
-  generateFeedback(prompt: string): Promise<string> {
-    return this.promptChainingService.generateFeedback(prompt);
+  generateReply(prompt: string): Promise<string> {
+    return this.promptChainingService.generateReply(prompt);
   }
 
   testChains(prompt: string): Promise<ChainOutput> {

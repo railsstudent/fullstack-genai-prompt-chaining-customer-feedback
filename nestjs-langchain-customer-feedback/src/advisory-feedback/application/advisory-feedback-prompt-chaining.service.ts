@@ -49,7 +49,7 @@ export class AdvisoryFeedbackPromptChainingService {
     return sentimentPrompt.pipe(this.model).pipe(new StringOutputParser());
   }
 
-  async generateFeedback(feedback: string): Promise<string> {
+  async generateReply(feedback: string): Promise<string> {
     try {
       const chainMap = RunnableMap.from<CustomerFeedback>({
         language: this.createFindLanguageChain(),
@@ -58,11 +58,11 @@ export class AdvisoryFeedbackPromptChainingService {
         feedback: ({ feedback }) => feedback,
       });
 
-      const feedbackPrompt =
+      const replyPrompt =
         PromptTemplate.fromTemplate(`The customer wrote a {sentiment} feedback about {topic} in {language}. Feedback: {feedback}
         Please give a short reply in the same language.`);
 
-      const combinedChain = RunnableSequence.from([chainMap, feedbackPrompt, this.model, new StringOutputParser()]);
+      const combinedChain = RunnableSequence.from([chainMap, replyPrompt, this.model, new StringOutputParser()]);
 
       const response = await combinedChain.invoke({
         feedback,
