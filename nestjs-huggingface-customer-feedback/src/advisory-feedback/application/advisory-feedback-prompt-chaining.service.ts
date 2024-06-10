@@ -3,7 +3,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { env } from '~configs/env.config';
 import { HUGGINGFACE_INFERENCE } from './constants/huggingface.constant';
 import { ChatMessage } from './types/chat-message.type';
-import { Conversation } from './types/conversation:type';
+import { Conversation } from './types/conversation.type';
 
 @Injectable()
 export class AdvisoryFeedbackPromptChainingService {
