@@ -38,10 +38,10 @@ export class Bootstrap {
     const config = new DocumentBuilder()
       .setTitle('ESG Advisory Feedback with Huggingface')
       .setDescription(
-        'Integrate with HuggingFace and Mixtrial model to improve ESG advisory feebacking by prompt chaining',
+        'Integrate with HuggingFace and Mistral model to improve ESG advisory feebacking by prompt chaining',
       )
       .setVersion('1.0')
-      .addTag('Huggingface, Mixtrial, Prompt Chaining')
+      .addTag('Huggingface, Mistral 7B model, Conversation')
       .build();
     const document = SwaggerModule.createDocument(this.app, config);
     SwaggerModule.setup('api', this.app, document);
