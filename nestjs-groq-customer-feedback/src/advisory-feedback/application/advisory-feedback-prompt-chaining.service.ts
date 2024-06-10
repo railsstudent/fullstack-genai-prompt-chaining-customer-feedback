@@ -1,20 +1,20 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import Groq from 'groq-sdk';
-import { MODEL_CONFIG } from './configs/groq.config';
-import { GROQ_REPLY_MODEL } from './constants/groq.constant';
-import { SentimentAnalysis } from './types/sentiment-analysis.type';
 import { ChatCompletionMessageParam } from 'groq-sdk/resources/chat/completions';
+import { MODEL_CONFIG } from './configs/groq.config';
+import { GROQ_CHAT_MODEL } from './constants/groq.constant';
+import { SentimentAnalysis } from './types/sentiment-analysis.type';
 
 @Injectable()
 export class AdvisoryFeedbackPromptChainingService {
   private readonly logger = new Logger(AdvisoryFeedbackPromptChainingService.name);
-  private chatbot = this.groq.chat.completions;
+  private chatbot = this.groq.completions;
 
-  constructor(@Inject(GROQ_REPLY_MODEL) private groq: Groq) {}
+  constructor(@Inject(GROQ_CHAT_MODEL) private groq: Groq.Chat) {}
 
   async generateReply(feedback: string): Promise<string> {
     try {
-      const instruction = `You are a professional ESG advisor that can reply in the same language that the customer's feedback is written in. 
+      const instruction = `You are a professional ESG advisor who can reply in the same language as the customer's feedback. 
     The reply is short and should also address the sentiment and topics of the feedback.`;
 
       const messages: ChatCompletionMessageParam[] = [

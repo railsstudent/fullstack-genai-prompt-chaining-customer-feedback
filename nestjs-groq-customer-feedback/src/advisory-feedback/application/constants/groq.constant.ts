@@ -1,1 +1,1 @@
-export const GROQ_REPLY_MODEL = 'GROQ_REPLY_MODEL';
+export const GROQ_CHAT_MODEL = 'GROQ_CHAT_MODEL';
