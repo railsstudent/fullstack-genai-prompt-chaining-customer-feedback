@@ -41,7 +41,7 @@ export class FeedbackSendComponent {
   prevFeedback = signal<string | null>(null);
   errorMessage = signal('');
   isLoading = model.required<boolean>()
-  clicked = output<{ feedback: string }>();
+  clicked = output<string>();
   buttonText = computed(() => this.isLoading() ? 'Generating...' : 'Send'); 
   viewModel = computed(() => ({
     feedback: this.feedback(),
@@ -62,9 +62,7 @@ export class FeedbackSendComponent {
     }
 
     this.prevFeedback.set(current);
-    this.clicked.emit({
-      feedback: current,
-    });
+    this.clicked.emit(current);
     this.isLoading.set(true);
   }
 

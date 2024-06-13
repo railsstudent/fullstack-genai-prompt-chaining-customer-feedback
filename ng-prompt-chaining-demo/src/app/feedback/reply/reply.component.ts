@@ -39,8 +39,8 @@ export class ReplyComponent {
     effect((cleanUp) => { 
       const sub = outputToObservable(this.feedbackSend().clicked)
         .pipe(
-          filter(({ feedback }) => typeof feedback !== 'undefined' && feedback.trim() !== ''),
-          map(({ feedback }) => feedback.trim()),
+          filter((feedback) => typeof feedback !== 'undefined' && feedback.trim() !== ''),
+          map((feedback) => feedback.trim()),
           tap(() => this.reply.set('')),
           switchMap((feedback) => this.replyService.getReply(feedback)
             .pipe(finalize(() => this.isLoading.set(false)))
